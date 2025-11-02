@@ -23,7 +23,8 @@
 
 pragma solidity ^0.8.24;
 
-import {AggregatorV3Interface} from "chainlink-brownie-contracts/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from
+    "chainlink-brownie-contracts/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 /*//////////////////////////////////////////////////////////////
                                 ERRORS
@@ -64,13 +65,11 @@ contract FundMe {
     }
 
     function getPrice() internal view returns (uint256) {
-        (, int256 price, , , ) = s_priceFeed.latestRoundData();
+        (, int256 price,,,) = s_priceFeed.latestRoundData();
         return (uint256(price * 1e10));
     }
 
-    function getConversion(
-        uint256 amountInWei
-    ) internal view returns (uint256) {
+    function getConversion(uint256 amountInWei) internal view returns (uint256) {
         uint256 price = getPrice();
         uint256 finaUsd = ((amountInWei) * (price)) / 1e18;
 
@@ -100,7 +99,7 @@ contract FundMe {
         }
         s_funders = new address[](0);
 
-        (bool success, ) = i_owner.call{value: address(this).balance}("");
+        (bool success,) = i_owner.call{value: address(this).balance}("");
 
         if (!success) {
             revert FundMe__WITHDRAW_FAILED();

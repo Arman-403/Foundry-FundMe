@@ -83,21 +83,14 @@ contract FundMeTest is Test {
         uint256 endingContractBalance = address(fundMe).balance;
 
         assertEq(endingContractBalance, 0);
-        assertEq(
-            endingOwnerBalance,
-            startingOwnerBalance + startingContractBalance
-        );
+        assertEq(endingOwnerBalance, startingOwnerBalance + startingContractBalance);
     }
 
     function testWithdrawWithMultipleFunders() public funded {
         uint160 startingOfFunder = 1;
         uint160 totalNoOfFunders = 10;
 
-        for (
-            startingOfFunder = 1;
-            startingOfFunder < totalNoOfFunders;
-            startingOfFunder++
-        ) {
+        for (startingOfFunder = 1; startingOfFunder < totalNoOfFunders; startingOfFunder++) {
             hoax(address(startingOfFunder), SEND_VALUE);
             fundMe.fund{value: SEND_VALUE}();
         }
@@ -112,9 +105,6 @@ contract FundMeTest is Test {
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
 
         assertEq(endingFundMeBalance, 0);
-        assertEq(
-            endingOwnerBalance,
-            startingFundMeBalance + startingOwnerBalance
-        );
+        assertEq(endingOwnerBalance, startingFundMeBalance + startingOwnerBalance);
     }
 }

@@ -26,12 +26,11 @@ contract interactionTest is Test {
         assertEq(funder, address(fundFundMe));
     }
 
-    function testUserCanWithdrawInteraction() public{
-
+    function testUserCanWithdrawInteraction() public {
         FundFundMe fundFundMe = new FundFundMe();
-        vm.deal(address(fundFundMe),STARTING_BALANCE);
+        vm.deal(address(fundFundMe), STARTING_BALANCE);
         fundFundMe.fundFundMe(address(fundMe));
-        
+
         WithdrawFundMe withdrawFundMe = new WithdrawFundMe();
         withdrawFundMe.withdrawFundMe(address(fundMe));
 
