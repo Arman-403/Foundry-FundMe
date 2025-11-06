@@ -51,17 +51,17 @@ contract FundMeTest is Test {
         assertEq(funder, USER);
     }
 
-    function testGetAllFunders() public funded {
-        uint256 fundersLength = fundMe.getFundersArrayLength();
+    // function testGetAllFunders() public funded {
+    //     uint256 fundersLength = fundMe.getFundersArrayLength();
 
-        for (uint256 i = 0; i < fundersLength; i++) {
-            address _funder = fundMe.getFunder(i);
+    //     for (uint256 i = 0; i < fundersLength; i++) {
+    //         address _funder = fundMe.getFunder(i);
 
-            console.log("Funders: ");
-            console.log(_funder);
-        }
-        assertEq(fundersLength, 1, "Should be only one funder there");
-    }
+    //         console.log("Funder: ");
+    //         console.log(_funder);
+    //     }
+    //     assertEq(fundersLength, 1, "Should be only one funder there");
+    // }
 
     function testOnlyOwnerCanWithdraw() public funded {
         vm.expectRevert();

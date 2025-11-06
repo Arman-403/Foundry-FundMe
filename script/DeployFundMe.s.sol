@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import {Script} from "forge-std/Script.sol";
+import {Script, console} from "forge-std/Script.sol";
 import {FundMe} from "../src/FundMe.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 
@@ -11,6 +11,9 @@ contract DeployFundMe is Script {
         HelperConfig helperConfig = new HelperConfig();
 
         address activeNetwork = helperConfig.activeNetworkConfig();
+        // Logs
+        console.log("PriceFeed address:", activeNetwork);
+        console.log("Current chain ID:", block.chainid);
 
         vm.startBroadcast();
         FundMe fundMe = new FundMe(activeNetwork);

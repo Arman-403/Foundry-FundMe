@@ -1,24 +1,3 @@
-// Layout of Contract:
-// version
-// imports
-// errors
-// interfaces, libraries, contracts
-// Type declarations (enums, structs, etc.)
-// State variables (variables, mappings, arrays, etc.)
-// Events
-// Modifiers
-// Functions
-
-// Layout of Functions:
-// constructor
-// receive function  (if exists)
-// fallback function (if exists)
-// external
-// public
-// internal
-// private
-// view & pure functions
-
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.24;
@@ -66,18 +45,6 @@ contract FundMe {
         fund();
     }
 
-    // function getPrice() internal view returns (uint256) {
-    //     (, int256 price,,,) = s_priceFeed.latestRoundData();
-    //     return (uint256(price * 1e10));
-    // }
-
-    // function getConversion(uint256 amountInWei) internal view returns (uint256) {
-    //     uint256 price = getPrice();
-    //     uint256 finaUsd = ((amountInWei) * (price)) / 1e18;
-
-    //     return finaUsd;
-    // }
-
     function fund() public payable {
         require(msg.value.getConversionRate(s_priceFeed) >= MIN_USD, "Send More Eth");
         s_funders.push(msg.sender);
@@ -85,14 +52,6 @@ contract FundMe {
     }
 
     function withdraw() external OwnerOnly {
-        // this is good way but we can save more gas
-        // uint256 length = s_funders.length;
-        // for (uint256 i = 0; i < length; i++) {
-        //     address funder = s_funders[i];
-        //     s_funderToAmountFunded[funder] = 0;
-        // }
-
-        // gas efficient version
         address[] memory funders = s_funders;
         for (uint256 i = 0; i < funders.length; i++) {
             s_funderToAmountFunded[funders[i]] = 0;
@@ -129,8 +88,4 @@ contract FundMe {
     function getFunder(uint256 index) public view returns (address) {
         return s_funders[index];
     }
-
-    // function getFundersArrayLength() public view returns (uint256) {
-    //     return s_funders.length;
-    // }
 }

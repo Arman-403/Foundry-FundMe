@@ -2,20 +2,34 @@
 
 pragma solidity ^0.8.24;
 
-import {Test} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {DeployFundMe} from "../../script/DeployFundMe.s.sol";
 import {FundMe} from "../../src/FundMe.sol";
+import {MockV3Aggregator} from "../../test/mocks/MockV3Aggregator.sol";
 import {FundFundMe, WithdrawFundMe} from "../../script/Interaction.s.sol";
+import {CodeConstants} from "../../script/HelperConfig.s.sol";
 
-contract interactionTest is Test {
+contract interactionTest is Test, CodeConstants {
     FundMe public fundMe;
-    uint256 public constant SEND_VALUE = 0.01 ether;
-    uint256 public constant STARTING_BALANCE = 100 ether;
 
     function setUp() public {
-        DeployFundMe deployer = new DeployFundMe();
-        fundMe = deployer.run();
+        bool isCI = vm.envOr("CI", false);
+
+        if (isCI) {
+            // Deploy mock setup for CI
+            MockV3Aggregator mockV3Aggregator = new MockV3Aggregator(DECIMALS, INITIAL_PRICE);
+            fundMe = new FundMe(address(mockV3Aggregator));
+            console.log("Recent Mock Price Feed address for CI", address(mockV3Aggregator));
+            console.log("Running on CI : Deployed FundMe with mock ");
+        } else {
+            // normal deployer for local development
+            DeployFundMe deployer = new DeployFundMe();
+            fundMe = deployer.run();
+            console.log("Running Locally: using DeployFundMe script");
+        }
     }
+
+    //chore: add hybrid CI-aware test setup with mock deployment support
 
     function testUserCanFundInteraction() public {
         FundFundMe fundFundMe = new FundFundMe();
