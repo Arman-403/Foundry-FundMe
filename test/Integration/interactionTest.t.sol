@@ -10,10 +10,13 @@ import {FundFundMe, WithdrawFundMe} from "../../script/Interaction.s.sol";
 import {CodeConstants} from "../../script/HelperConfig.s.sol";
 
 contract interactionTest is Test, CodeConstants {
+    receive() external payable {}
+
     FundMe public fundMe;
+    bool public isCI;
 
     function setUp() public {
-        bool isCI = vm.envOr("CI", false);
+        isCI = vm.envOr("CI", false);
 
         if (isCI) {
             // Deploy mock setup for CI
@@ -45,9 +48,16 @@ contract interactionTest is Test, CodeConstants {
         vm.deal(address(fundFundMe), STARTING_BALANCE);
         fundFundMe.fundFundMe(address(fundMe));
 
-        WithdrawFundMe withdrawFundMe = new WithdrawFundMe();
-        withdrawFundMe.withdrawFundMe(address(fundMe));
-
+        console.log("fundme me funded successfully");
+        console.log("fundme balance:", address(fundMe).balance);
+        // make it CI-aware
+        if (isCI) {
+            vm.prank(address(this));
+            fundMe.withdraw();
+        } else {
+            WithdrawFundMe withdrawFundMe = new WithdrawFundMe();
+            withdrawFundMe.withdrawFundMe(address(fundMe));
+        }
         assert(address(fundMe).balance == 0);
     }
 }
