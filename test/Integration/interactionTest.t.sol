@@ -20,15 +20,9 @@ contract interactionTest is Test, CodeConstants {
 
         if (isCI) {
             // Deploy mock setup for CI
-            MockV3Aggregator mockV3Aggregator = new MockV3Aggregator(
-                DECIMALS,
-                INITIAL_PRICE
-            );
+            MockV3Aggregator mockV3Aggregator = new MockV3Aggregator(DECIMALS, INITIAL_PRICE);
             fundMe = new FundMe(address(mockV3Aggregator));
-            console.log(
-                "Recent Mock Price Feed address for CI",
-                address(mockV3Aggregator)
-            );
+            console.log("Recent Mock Price Feed address for CI", address(mockV3Aggregator));
             console.log("Running on CI : Deployed FundMe with mock ");
             // In CI, test contract (this) should be the owner since we deployed directly
             assertEq(fundMe.getOwner(), address(this));
